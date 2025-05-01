@@ -1,4 +1,4 @@
-<!--- Made for YielidOS!--->
+<!--- YielidOS !--->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,361 +6,337 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The Yielid App Hub</title>
 <style>
-  :root {
-    --primary: #4361ee;
-    --primary-dark: #3a56d4;
-    --secondary: #f8f9fa;
-    --danger: #ef233c;
-    --success: #4cc9f0;
-    --dark: #2b2d42;
-    --light: #f8f9fa;
-    --gray: #6c757d;
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    --border-radius: 12px;
-    --glass: rgba(255, 255, 255, 0.08);
-    --glass-border: rgba(255, 255, 255, 0.2);
-  }
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&display=swap');
 
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-  }
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --secondary: #f8f9fa;
+  --danger: #ef233c;
+  --success: #4cc9f0;
+  --dark: #2b2d42;
+  --light: #f8f9fa;
+  --gray: #6c757d;
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  --border-radius: 14px;
+}
 
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Fredoka', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #f5f7ff 0%, #e9ecef 100%);
+  color: var(--dark);
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+  overflow-x: hidden;
+  font-weight: 500;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, rgba(67, 97, 238, 0.05) 0%, transparent 70%);
+  z-index: -1;
+  animation: rotate 20s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 1rem 0;
+  position: relative;
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+}
+
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.025em;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: calc(var(--border-radius) / 1.5);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: var(--transition);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  box-shadow: var(--shadow);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+
+.progress-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: transparent;
+  z-index: 1000;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  transition: width 0.3s ease;
+}
+
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-top: 2rem;
+}
+
+.app-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  transition: var(--transition);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.app-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.app-thumbnail {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: calc(var(--border-radius) / 1.5);
+  object-fit: cover;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+.app-card:hover .app-thumbnail {
+  transform: scale(1.02);
+}
+
+.app-title {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: var(--dark);
+  font-size: 1.1rem;
+}
+
+.app-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.window {
+  position: fixed;
+  width: 500px;
+  min-width: 300px;
+  min-height: 200px;
+  max-width: 90vw;
+  max-height: 80vh;
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  transform: translate(0, 0);
+}
+
+.window-topbar {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: move;
+  user-select: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.window-title {
+  font-size: 1.1rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window-close {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.window-close:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.window-content {
+  flex: 1;
+  padding: 1.5rem;
+  overflow: auto;
+  background: #f8f9fa;
+}
+
+.window-resizer {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  background: var(--primary);
+  cursor: nwse-resize;
+  border-radius: 4px 0 0 0;
+  z-index: 10;
+}
+
+.window-content::-webkit-scrollbar {
+  width: 8px;
+}
+.window-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.window-content::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 4px;
+}
+
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.loader-content {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: var(--border-radius);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.loader-progress {
+  width: 100%;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+
+.loader-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  transition: width 0.3s ease;
+}
+
+@media (max-width: 600px) {
   body {
-    background: linear-gradient(135deg, #f5f7ff 0%, #e9ecef 100%);
-    color: var(--dark);
-    min-height: 100vh;
-    padding: 2rem;
-    position: relative;
-    overflow-x: hidden;
+    padding: 1rem;
   }
-
-  body::before {
-    content: "";
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(67, 97, 238, 0.05) 0%, transparent 70%);
-    z-index: -1;
-    animation: rotate 20s linear infinite;
-  }
-
-  @keyframes rotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2.5rem;
-    padding: 1rem 0;
-    position: relative;
-  }
-
-  header::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
-  }
-
-  h1 {
-    font-size: 2.25rem;
-    font-weight: 800;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    letter-spacing: -0.025em;
-  }
-
-  .btn {
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: calc(var(--border-radius) / 1.5);
-    cursor: pointer;
-    font-weight: 600;
-    font-size: 0.9rem;
-    transition: var(--transition);
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    position: relative;
-    overflow: hidden;
-    user-select: none;
-  }
-
-  .btn::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(255,255,255,0.1), rgba(255,255,255,0));
-    opacity: 0;
-    transition: var(--transition);
-  }
-
-  .btn:hover::before {
-    opacity: 1;
-  }
-
-  .btn:active {
-    transform: translateY(1px);
-  }
-
-  .btn-primary {
-    background: var(--primary);
-    color: white;
-    box-shadow: var(--shadow);
-  }
-
-  .btn-primary:hover {
-    background: var(--primary-dark);
-  }
-
-  .btn-danger {
-    background: var(--danger);
-    color: white;
-  }
-
-  .btn-success {
-    background: var(--success);
-    color: white;
-  }
-
-  .progress-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 4px;
-    background: transparent;
-    z-index: 1000;
-  }
-
-  .progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-    transition: width 0.3s ease;
-  }
-
   .apps-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1.75rem;
-    margin-top: 2rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
-  .app-card {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow);
-    transition: var(--transition);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .app-card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(67, 97, 238, 0.03) 0%, transparent 100%);
-    z-index: -1;
-  }
-
-  .app-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  }
-
   .app-thumbnail {
-    width: 100%;
-    aspect-ratio: 16/9;
-    border-radius: calc(var(--border-radius) / 1.5);
-    object-fit: cover;
-    margin-bottom: 1.25rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: var(--transition);
+    height: auto;
+    aspect-ratio: auto;
+    max-height: 200px;
   }
-
-  .app-card:hover .app-thumbnail {
-    transform: scale(1.02);
+  .window {
+    min-width: 90vw !important;
+    min-height: 60vh !important;
+    resize: none !important;
   }
-
-  .app-title {
-    font-weight: 700;
-    margin-bottom: 0.75rem;
-    color: var(--dark);
-    font-size: 1.1rem;
-  }
-
-  .app-buttons {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: center;
-  }
-
-  .app-window {
-    position: fixed;
-    background: rgba(255, 255, 255, 0.98);
-    backdrop-filter: blur(20px);
-    border-radius: var(--border-radius);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-    min-width: 300px;
-    min-height: 200px;
-    overflow: hidden;
-    resize: both;
-    z-index: 1001;
-    border: 1px solid var(--glass-border);
-    transform: translate(0, 0);
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .app-window:hover {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-  }
-
-  .window-header {
-    padding: 1rem 1.25rem;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
-    color: white;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: move;
-    user-select: none;
-    position: relative;
-    flex-shrink: 0;
-  }
-
-  .window-header::after {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
-  }
-
-  .window-content {
-    padding: 1.25rem;
-    overflow: auto;
-    flex: 1 1 auto;
-    background: rgba(255, 255, 255, 0.95);
-  }
-
-  .resize-handle {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    width: 20px;
-    height: 20px;
-    background: var(--primary);
-    cursor: nwse-resize;
-    border-radius: 4px 0 0 0;
-    z-index: 10;
-  }
-
-  .loader {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-  }
-
-  .loader-content {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    text-align: center;
-    max-width: 400px;
-    width: 90%;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .loader-progress {
-    width: 100%;
-    height: 8px;
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    margin: 1.5rem 0;
-    overflow: hidden;
-  }
-
-  .loader-progress-bar {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
-    transition: width 0.3s ease;
-  }
-
-  /* Scrollbar styling */
-  .window-content::-webkit-scrollbar {
-    width: 10px;
-  }
-  .window-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-  .window-content::-webkit-scrollbar-thumb {
-    background: var(--primary);
-    border-radius: 5px;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    body {
-      padding: 1rem;
-    }
-    .apps-grid {
-      grid-template-columns: 1fr;
-      gap: 1rem;
-    }
-    .app-thumbnail {
-      height: auto;
-      aspect-ratio: auto;
-      max-height: 200px;
-    }
-    .app-window {
-      min-width: 90vw !important;
-      min-height: 60vh !important;
-      resize: none !important;
-    }
-  }
+}
 </style>
 </head>
 <body>
@@ -390,9 +366,9 @@
 
   <input type="file" id="fileInput" accept=".yua,.zip" aria-hidden="true" hidden>
 
-  <!-- Libraries -->
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+  <!-- Interact.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/interactjs@1.10.11/dist/interact.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 
   <script>
     const appsGrid = document.getElementById('appsGrid');
@@ -512,7 +488,7 @@
 
       const windowId = `app-window-${Date.now()}`;
       const win = document.createElement('section');
-      win.className = 'app-window';
+      win.className = 'window';
       win.id = windowId;
       win.style.transform = `translate(${50 + Math.random() * 200}px, ${50 + Math.random() * 200}px)`;
       win.style.zIndex = ++zIndexCounter;
@@ -523,25 +499,22 @@
       win.setAttribute('aria-label', app.title);
 
       win.innerHTML = `
-        <header class="window-header" aria-grabbed="false" tabindex="0">
-          <span>${escapeHTML(app.title)}</span>
-          <button class="btn btn-danger" aria-label="Close ${escapeHTML(app.title)} window" title="Close window">&times;</button>
+        <header class="window-topbar" aria-grabbed="false" tabindex="0">
+          <div class="window-title">${escapeHTML(app.title)}</div>
+          <button class="window-close" aria-label="Close ${escapeHTML(app.title)} window" title="Close window">&times;</button>
         </header>
         <div class="window-content">${app.content}</div>
-        <div class="resize-handle" aria-label="Resize window" role="separator" tabindex="0"></div>
+        <div class="window-resizer" aria-label="Resize window" role="separator" tabindex="0"></div>
       `;
 
       document.body.appendChild(win);
 
-      // Setup drag and resize
       setupWindowInteractions(win);
 
-      // Close button
-      win.querySelector('.btn-danger').addEventListener('click', () => {
+      win.querySelector('.window-close').addEventListener('click', () => {
         win.remove();
       });
 
-      // Bring window to front on click/focus
       win.addEventListener('mousedown', () => bringToFront(win));
       win.addEventListener('touchstart', () => bringToFront(win));
       win.focus();
@@ -549,13 +522,14 @@
 
     function setupWindowInteractions(win) {
       interact(win).draggable({
-        allowFrom: '.window-header',
+        allowFrom: '.window-topbar',
         modifiers: [
           interact.modifiers.restrictRect({
-            restriction: 'body',
+            restriction: 'parent',
             endOnly: true
           })
         ],
+        inertia: true,
         listeners: {
           start(event) {
             bringToFront(win);
@@ -566,9 +540,8 @@
             let x = (parseFloat(target.dataset.x) || 0) + event.dx;
             let y = (parseFloat(target.dataset.y) || 0) + event.dy;
 
-            // Keep window inside viewport
+            // Clamp inside viewport
             const rect = target.getBoundingClientRect();
-            const bodyRect = document.body.getBoundingClientRect();
             if (x + rect.width > window.innerWidth) x = window.innerWidth - rect.width;
             if (y + rect.height > window.innerHeight) y = window.innerHeight - rect.height;
             if (x < 0) x = 0;
@@ -594,6 +567,7 @@
             max: { width: window.innerWidth, height: window.innerHeight }
           })
         ],
+        inertia: true,
         listeners: {
           move(event) {
             const target = event.target;
@@ -659,4 +633,4 @@
     loadApps();
   </script>
 </body>
-    </html>
+</html>
