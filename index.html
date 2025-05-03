@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>The Yielid App Hub</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --primary: #4361ee;
+  --primary-dark: #3a56d4;
+  --success: #4cc9f0;
+  --danger: #ef233c;
+  --gray: #6c757d;
+  --border-radius: 14px;
+  --shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+html, body, button, input, select, textarea, .app-card, .window, .window-topbar, .window-content, .btn {
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+body {
+  background: linear-gradient(135deg, #f5f7ff 0%, #e9ecef 100%);
+  color: #222;
+  margin: 0;
+  padding: 2rem;
+  min-height: 100vh;
+  font-size: 16px;
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  padding: 1rem 0;
+  position: relative;
+}
+h1 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.025em;
+}
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.btn-primary {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  color: white;
+  box-shadow: var(--shadow);
+}
+.btn-primary:hover {
+  background: linear-gradient(90deg, var(--primary-dark) 0%, var(--success) 100%);
+}
+.btn-danger {
+  background: var(--danger);
+  color: white;
+}
+.btn-success {
+  background: var(--success);
+  color: white;
+}
+.apps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.75rem;
+  margin-top: 2rem;
+}
+.app-card {
+  background: rgba(255,255,255,0.95);
+  border-radius: var(--border-radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+  animation: slideIn 0.3s cubic-bezier(0.4,0,0.2,1);
+  transition: box-shadow 0.2s, transform 0.2s;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+.app-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.12);
+}
+.app-thumbnail {
+  width: 100%;
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+  object-fit: cover;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+.app-card:hover .app-thumbnail { transform: scale(1.02); }
+.app-title {
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #222;
+  font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.app-buttons {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: center;
+}
+.window {
+  position: absolute;
+  left: 100px; top: 100px;
+  width: 500px; height: 320px;
+  min-width: 280px; min-height: 120px;
+  background: #fff;
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  border: 1px solid rgba(0,0,0,0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  animation: fadeIn 0.25s cubic-bezier(0.4,0,0.2,1);
+  transition: box-shadow 0.3s, transform 0.3s, height 0.4s;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.94);}
+  to   { opacity: 1; transform: scale(1);}
+}
+.window.minimized {
+  height: auto !important;
+  min-height: 0 !important;
+  max-height: none !important;
+}
+.window-topbar {
+  background: linear-gradient(90deg, var(--primary) 0%, var(--success) 100%);
+  color: #fff;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  user-select: none;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  min-height: 48px;
+  height: 48px;
+  cursor: move;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.window-title {
+  font-size: 1.1rem;
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.window-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+  margin-left: 0.2rem;
+  outline: none;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.window-btn:hover {
+  background: rgba(255,255,255,0.15);
+}
+.window-content {
+  flex: 1;
+  background: #f8f9fa;
+  padding: 1rem;
+  overflow: auto;
+  transition: max-height 0.4s cubic-bezier(0.4,0,0.2,1), opacity 0.3s, padding 0.3s;
+  max-height: 800px;
+  opacity: 1;
+  will-change: max-height, opacity, padding;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.window-content.minimized {
+  max-height: 0 !important;
+  opacity: 0;
+  pointer-events: none;
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: none !important;
+}
+.window-content iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  background: white;
+  min-height: 200px;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+.window-resizer {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  right: 2px;
+  bottom: 2px;
+  z-index: 10;
+  cursor: se-resize;
+  background: rgba(0,0,0,0.10);
+  border-radius: 4px;
+  touch-action: none;
+}
+.window-resizer:after {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid #aaa;
+  border-bottom: 2px solid #aaa;
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  pointer-events: none;
+}
+#taskManagerModal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+#taskManagerModal.active {
+  display: flex;
+}
+#taskManagerContent {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  width: 320px;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+#taskManagerContent h2 {
+  margin-bottom: 1rem;
+}
+#taskManagerList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem 0;
+}
+#taskManagerList li {
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+#taskManagerList li.selected {
+  background: var(--primary);
+  color: white;
+}
+#taskManagerButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+#taskManagerButtons button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-family: 'Fredoka', cursive, sans-serif !important;
+}
+#taskManagerButtons button#forceCloseBtn {
+  background: var(--danger);
+  color: white;
+}
+#taskManagerButtons button#cancelBtn {
+  background: var(--gray);
+  color: white;
+}
+.force-close-loader {
+  width: 100%;
+  height: 12px;
+  background: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 1rem;
+}
+.force-close-loader-bar {
+  height: 100%;
+  width: 0;
+  background: var(--primary);
+  transition: width 0.3s ease;
+}
+/* Install Modal */
+#installModal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 4000;
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+#installModal.active {
+  display: flex;
+}
+#installModal .modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  min-width: 320px;
+  text-align: center;
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+.progressbar-outer {
+  width: 100%;
+  max-width: 340px;
+  height: 22px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 1.5rem auto 0 auto;
+  box-shadow: 0 2px 8px rgba(67,97,238,0.10);
+}
+.progressbar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4361ee 0%, #4cc9f0 100%);
+  border-radius: 12px 0 0 12px;
+  transition: width 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+#errorModal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 5000;
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+#errorModal.active {
+  display: flex;
+}
+#errorModal .modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  min-width: 320px;
+  text-align: center;
+  font-family: 'Fredoka', cursive, sans-serif;
+}
+#errorModal .modal-content h2 {
+  color: var(--danger);
+  margin-bottom: 1rem;
+}
+#errorModal .modal-content button {
+  margin-top: 1.5rem;
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>The Yielid App Hub</h1>
+  <button class="btn btn-primary" id="addAppBtn">Add an App</button>
+  <button class="btn btn-success" id="globalTaskManagerBtn">Task Manager</button>
+</header>
+<main>
+  <section class="apps-grid" id="appsGrid"></section>
+</main>
+<!-- Install Modal -->
+<div id="installModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="installModalTitle">
+  <div class="modal-content">
+    <h2 id="installModalTitle">Installing App...</h2>
+    <div class="progressbar-outer">
+      <div class="progressbar-inner" id="installProgressBar"></div>
+    </div>
+    <div id="installPercent" style="margin-top:1rem;font-weight:600;">0%</div>
+  </div>
+</div>
+<!-- Error Modal -->
+<div id="errorModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="errorModalTitle">
+  <div class="modal-content">
+    <h2 id="errorModalTitle">Error</h2>
+    <div id="errorModalMsg" style="color:#222;line-height:1.5;"></div>
+    <button class="btn btn-primary" onclick="hideErrorModal()">OK</button>
+  </div>
+</div>
+<input type="file" id="fileInput" accept=".yua,.zip" aria-hidden="true" hidden>
+<div id="taskManagerModal" role="dialog" aria-modal="true" aria-labelledby="taskManagerTitle">
+  <div id="taskManagerContent">
+    <h2 id="taskManagerTitle">Task Manager</h2>
+    <ul id="taskManagerList" tabindex="0"></ul>
+    <div id="taskManagerButtons">
+      <button id="forceCloseBtn" disabled>Force Close</button>
+      <button id="cancelBtn">Cancel</button>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
+// IndexedDB setup and utility functions
+const DB_NAME = 'YielidAppHubDB';
+const DB_VERSION = 1;
+let db;
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onupgradeneeded = function(e) {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains('apps')) {
+        db.createObjectStore('apps', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+    request.onsuccess = function(e) { db = e.target.result; resolve(); };
+    request.onerror = function(e) { reject(e.target.error); };
+  });
+}
+function saveAppToDB(app) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('apps', 'readwrite');
+    const store = tx.objectStore('apps');
+    const req = store.add(app);
+    req.onsuccess = () => resolve();
+    req.onerror = e => reject(e.target.error);
+  });
+}
+function getAppsFromDB() {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('apps', 'readonly');
+    const store = tx.objectStore('apps');
+    const req = store.getAll();
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = e => reject(e.target.error);
+  });
+}
+function deleteAppFromDB(id) {
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction('apps', 'readwrite');
+    const store = tx.objectStore('apps');
+    const req = store.delete(id);
+    req.onsuccess = () => resolve();
+    req.onerror = e => reject(e.target.error);
+  });
+}
+const appsGrid = document.getElementById('appsGrid');
+const fileInput = document.getElementById('fileInput');
+let zIndexCounter = 1000;
+
+// Modal helpers
+function showInstallModal() {
+  document.getElementById('installModal').classList.add('active');
+  updateInstallProgress(0);
+}
+function hideInstallModal() {
+  document.getElementById('installModal').classList.remove('active');
+  updateInstallProgress(0);
+}
+function updateInstallProgress(percent) {
+  const bar = document.getElementById('installProgressBar');
+  const label = document.getElementById('installPercent');
+  bar.style.width = percent + '%';
+  label.textContent = percent + '%';
+}
+function showErrorModal(msg) {
+  document.getElementById('errorModalMsg').textContent = msg;
+  document.getElementById('errorModal').classList.add('active');
+}
+function hideErrorModal() {
+  document.getElementById('errorModal').classList.remove('active');
+}
+
+// Add event listener for file input
+document.getElementById('addAppBtn').addEventListener('click', () => {
+  fileInput.value = null;
+  fileInput.click();
+});
+fileInput.addEventListener('change', async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  // Check file extension
+  if (!file.name.toLowerCase().endsWith('.yua') && !file.name.toLowerCase().endsWith('.zip')) {
+    showErrorModal('Invalid file extension. Please upload a .yua or .zip file.');
+    return;
+  }
+
+  showInstallModal();
+
+  try {
+    const arrayBuffer = await readFileWithRealProgress(file, percent => updateInstallProgress(percent));
+    let zip;
+    try {
+      zip = await JSZip.loadAsync(arrayBuffer);
+    } catch {
+      throw new Error('The file is not a valid .yua or .zip archive.');
+    }
+
+    const metadataFile = zip.file('metadata.json');
+    const contentFile = zip.file('content.html');
+
+    if (!metadataFile || !contentFile) throw new Error('Missing metadata.json or content.html in the archive.');
+
+    const metadataText = await metadataFile.async('text');
+    let metadata;
+    try {
+      metadata = JSON.parse(metadataText);
+    } catch {
+      throw new Error('metadata.json is not valid JSON.');
+    }
+
+    if (!metadata['app.title'] || !metadata['app.thumbnail']) throw new Error('metadata.json missing required keys: app.title and app.thumbnail.');
+
+    // Check duplicate app title (case-insensitive)
+    const apps = await getAppsFromDB();
+    if (apps.some(a => a.title.toLowerCase() === metadata['app.title'].toLowerCase())) {
+      throw new Error(`An app with the title "${metadata['app.title']}" is already installed.`);
+    }
+
+    const contentHTML = await contentFile.async('text');
+
+    await saveAppToDB({
+      title: metadata['app.title'],
+      thumbnail: metadata['app.thumbnail'],
+      content: contentHTML
+    });
+
+    await renderApps();
+
+  } catch (err) {
+    showErrorModal('Error installing app: ' + err.message);
+  } finally {
+    hideInstallModal();
+  }
+});
+function readFileWithRealProgress(file, onProgress) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onprogress = (e) => {
+      if (e.lengthComputable) {
+        const percent = Math.round((e.loaded / e.total) * 100);
+        onProgress(percent);
+      }
+    };
+    reader.onload = () => {
+      onProgress(100);
+      resolve(reader.result);
+    };
+    reader.onerror = () => reject(reader.error);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+// Placeholder Hello App Logic
+const HELLO_APP = {
+  title: "Hello App",
+  thumbnail: "https://placehold.co/400x225/4361ee/fff?text=Hello+App",
+  content: `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:2rem 1rem;">
+      <h2 style="color:#4361ee;font-size:2rem;font-family:'Fredoka',sans-serif;margin-bottom:1.5rem;">Hello! Welcome here user!</h2>
+      <div style="font-size:1.15rem;max-width:500px;text-align:center;line-height:1.6;color:#222;font-family:'Fredoka',sans-serif;">
+        Welcome to the Yielid App Hub, this is where you can open and install apps using a <b>.yua</b> format.
+      </div>
+    </div>
+  `
+};
+
+async function ensureHelloApp() {
+  const apps = await getAppsFromDB();
+  if (!apps || !apps.length) {
+    await saveAppToDB(HELLO_APP);
+  }
+}
+
+// App Grid Rendering
+async function renderApps() {
+  const appsData = await getAppsFromDB();
+  if (!appsData || appsData.length === 0) {
+    appsGrid.innerHTML = '<p style="text-align:center; color: var(--gray); font-style: italic;">No apps installed yet. Click "Add an App" to get started.</p>';
+    return;
+  }
+  appsGrid.innerHTML = '';
+  appsData.forEach((app, index) => {
+    const card = document.createElement('article');
+    card.className = 'app-card';
+    card.setAttribute('role', 'listitem');
+    card.innerHTML = `
+      <img src="${escapeHTML(app.thumbnail)}" alt="${escapeHTML(app.title)} thumbnail" class="app-thumbnail" />
+      <h3 class="app-title">${escapeHTML(app.title)}</h3>
+      <div class="app-buttons">
+        <button class="btn btn-primary" aria-label="Open ${escapeHTML(app.title)}" data-index="${index}">Open</button>
+        <button class="btn btn-danger" aria-label="Delete ${escapeHTML(app.title)}" data-index="${index}">Delete</button>
+      </div>
+    `;
+    appsGrid.appendChild(card);
+  });
+  appsGrid.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('click', e => openApp(parseInt(e.target.dataset.index)));
+  });
+  appsGrid.querySelectorAll('.btn-danger').forEach(btn => {
+    btn.addEventListener('click', e => deleteApp(parseInt(e.target.dataset.index)));
+  });
+}
+const openWindows = new Map();
+async function openApp(index) {
+  const appsData = await getAppsFromDB();
+  if (!appsData || !appsData[index]) return;
+  const app = appsData[index];
+  const blob = new Blob([app.content], { type: 'text/html' });
+  const blobUrl = URL.createObjectURL(blob);
+  const windowId = `window-${Date.now()}`;
+  const win = document.createElement('section');
+  win.className = 'window';
+  win.id = windowId;
+  win.style.left = (100 + Math.random()*200) + 'px';
+  win.style.top = (100 + Math.random()*100) + 'px';
+  win.innerHTML = `
+    <div class="window-topbar">
+      <span class="window-title">${escapeHTML(app.title)}</span>
+      <button class="window-btn window-taskmgr" title="Task Manager">&#9881;</button>
+      <button class="window-btn window-maximize" title="Maximize">&#9723;</button>
+      <button class="window-btn window-minimize" title="Minimize">&#8722;</button>
+      <button class="window-btn window-close" title="Close">&times;</button>
+    </div>
+    <div class="window-content"><iframe src="${blobUrl}" sandbox="allow-scripts allow-forms allow-same-origin"></iframe></div>
+    <div class="window-resizer"></div>
+  `;
+  document.body.appendChild(win);
+  openWindows.set(windowId, {title: app.title, element: win, unresponsive: false, closeTap: 0, blobUrl});
+  makeDraggable(win);
+  makeResizable(win);
+  const closeBtn = win.querySelector('.window-close');
+  const maxBtn = win.querySelector('.window-maximize');
+  const minBtn = win.querySelector('.window-minimize');
+  const taskBtn = win.querySelector('.window-taskmgr');
+  const contentDiv = win.querySelector('.window-content');
+  let isMax = false, isMin = false, prev = {};
+  maxBtn.onclick = () => {
+    if (!isMax) {
+      prev = {left: win.style.left, top: win.style.top, width: win.style.width, height: win.style.height};
+      win.style.left = '0'; win.style.top = '0';
+      win.style.width = '100vw'; win.style.height = '100vh';
+      isMax = true; maxBtn.title = "Restore";
+    } else {
+      win.style.left = prev.left; win.style.top = prev.top;
+      win.style.width = prev.width; win.style.height = prev.height;
+      isMax = false; maxBtn.title = "Maximize";
+    }
+  };
+  minBtn.onclick = () => {
+    if (!isMin) { contentDiv.classList.add('minimized'); isMin = true; minBtn.title = "Restore"; }
+    else { contentDiv.classList.remove('minimized'); isMin = false; minBtn.title = "Minimize"; }
+  };
+  closeBtn.onclick = () => {
+    URL.revokeObjectURL(blobUrl);
+    win.remove();
+    openWindows.delete(windowId);
+  };
+  taskBtn.onclick = showTaskManager;
+  win.addEventListener('mousedown', ()=>{zIndexCounter++;win.style.zIndex=zIndexCounter;});
+}
+function makeDraggable(win) {
+  const header = win.querySelector('.window-topbar');
+  header.onmousedown = function(e) { startDrag(e, win); };
+  header.ontouchstart = function(e) { startDrag(e, win); };
+}
+function startDrag(e, win) {
+  let isTouch = e.type.startsWith('touch');
+  let startX = isTouch ? e.touches[0].clientX : e.clientX;
+  let startY = isTouch ? e.touches[0].clientY : e.clientY;
+  let origX = parseInt(win.style.left)||0, origY = parseInt(win.style.top)||0;
+  function move(ev) {
+    let clientX = isTouch ? (ev.touches ? ev.touches[0].clientX : ev.clientX) : ev.clientX;
+    let clientY = isTouch ? (ev.touches ? ev.touches[0].clientY : ev.clientY) : ev.clientY;
+    win.style.left = (origX + clientX - startX) + 'px';
+    win.style.top = (origY + clientY - startY) + 'px';
+  }
+  function up() {
+    document.removeEventListener(isTouch?'touchmove':'mousemove', move);
+    document.removeEventListener(isTouch?'touchend':'mouseup', up);
+  }
+  document.addEventListener(isTouch?'touchmove':'mousemove', move, {passive:false});
+  document.addEventListener(isTouch?'touchend':'mouseup', up, {passive:false});
+}
+function makeResizable(win) {
+  let resizer = win.querySelector('.window-resizer');
+  if (!resizer) return;
+  let isResizing = false, startX, startY, startW, startH;
+  function resizeStart(e) {
+    e.preventDefault();
+    isResizing = true;
+    let isTouch = e.type.startsWith('touch');
+    startX = isTouch ? e.touches[0].clientX : e.clientX;
+    startY = isTouch ? e.touches[0].clientY : e.clientY;
+    startW = win.offsetWidth;
+    startH = win.offsetHeight;
+    function resizeMove(ev) {
+      let clientX = isTouch ? (ev.touches ? ev.touches[0].clientX : ev.clientX) : ev.clientX;
+      let clientY = isTouch ? (ev.touches ? ev.touches[0].clientY : ev.clientY) : ev.clientY;
+      let newW = Math.max(280, startW + clientX - startX);
+      let newH = Math.max(120, startH + clientY - startY);
+      win.style.width = newW + 'px';
+      win.style.height = newH + 'px';
+    }
+    function resizeEnd() {
+      isResizing = false;
+      document.removeEventListener(isTouch?'touchmove':'mousemove', resizeMove);
+      document.removeEventListener(isTouch?'touchend':'mouseup', resizeEnd);
+    }
+    document.addEventListener(isTouch?'touchmove':'mousemove', resizeMove, {passive:false});
+    document.addEventListener(isTouch?'touchend':'mouseup', resizeEnd, {passive:false});
+  }
+  resizer.addEventListener('mousedown', resizeStart, {passive:false});
+  resizer.addEventListener('touchstart', resizeStart, {passive:false});
+}
+async function deleteApp(index) {
+  const appsData = await getAppsFromDB();
+  if (!appsData || !appsData[index]) return;
+  if (!confirm('Are you sure you want to delete this app?')) return;
+  await deleteAppFromDB(appsData[index].id);
+  await renderApps();
+}
+function escapeHTML(str) {
+  return String(str).replace(/[&<>"']/g, (m) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[m]);
+}
+// Task Manager UI
+const taskManagerModal = document.getElementById('taskManagerModal');
+const tmList = document.getElementById('taskManagerList');
+const forceCloseBtn = document.getElementById('forceCloseBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+let selectedTaskId = null;
+document.getElementById('globalTaskManagerBtn').addEventListener('click', showTaskManager);
+forceCloseBtn.addEventListener('click', () => {
+  if (selectedTaskId && openWindows.has(selectedTaskId)) {
+    openWindows.get(selectedTaskId).element.remove();
+    openWindows.delete(selectedTaskId);
+    showTaskManager();
+  }
+});
+cancelBtn.addEventListener('click', hideTaskManager);
+tmList.addEventListener('click', e => {
+  if (e.target.tagName !== 'LI') return;
+  selectTask(e.target.dataset.id);
+});
+function showTaskManager() {
+  tmList.innerHTML = '';
+  selectedTaskId = null;
+  forceCloseBtn.disabled = true;
+  for (const [id, winData] of openWindows.entries()) {
+    const li = document.createElement('li');
+    li.textContent = winData.title;
+    li.dataset.id = id;
+    tmList.appendChild(li);
+  }
+  taskManagerModal.classList.add('active');
+  tmList.focus();
+}
+function hideTaskManager() {
+  taskManagerModal.classList.remove('active');
+}
+function selectTask(id) {
+  selectedTaskId = id;
+  Array.from(tmList.children).forEach(li => {
+    li.classList.toggle('selected', li.dataset.id === id);
+  });
+  forceCloseBtn.disabled = false;
+}
+openDB().then(async () => {
+  await ensureHelloApp();
+  await renderApps();
+});
+</script>
+</body>
+</html>
